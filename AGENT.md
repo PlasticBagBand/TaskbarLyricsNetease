@@ -13,8 +13,8 @@
 4. **删功能时**：源码 + config.ini + README + AGENT.md 全部同步删除相关说明。
 5. **改动完成后自查**：README 与 AGENT.md 的描述必须与当前代码实际行为一致（配置项清单、默认值、热键、数据源、功能列表逐项核对）。
 6. 文档更新与代码改动在**同一次会话内完成**，不要留到以后。
+7. **项目已公开在 GitHub**：README 面向大众用通用默认值（微软雅黑/22px），作者本机个性化配置（苹方/26px/内缩3）只在本地 config.ini，不要写进 README 配置表。
 
----
 ---
 
 ## 0. 项目一句话
@@ -39,10 +39,15 @@ TaskbarLyricsNetease/
 │   ├── Windows.Foundation.UniversalApiContract.winmd   # 含 GSMTC/Ocr 等全部 API 元数据
 │   └── Windows.Media.MediaControlContract.winmd
 ├── build.bat / run.bat
-├── config.ini                    # 运行配置
-├── README.md                     # 用户文档
-└── AGENT.md                      # 本文件
+├── config.example.ini             # 配置参考模板（入库，通用默认值 + 完整注释）
+├── config.ini                     # 运行配置（本机生成，已 gitignore 不入库；首次运行自动生成默认）
+├── README.md                      # 用户文档（面向大众，配置表用通用默认值）
+└── AGENT.md                       # 本文件
 ```
+
+> **仓库已公开**（2026-08，GitHub `PlasticBagBand/TaskbarLyricsNetease`）。
+> README 的配置表/功能描述面向大众（通用默认值：微软雅黑/22px 等）；
+> **作者本机偏好**（苹方-简/26px/TrayInsetV=3 等）只存在于本机 config.ini，不入库，勿写入 README。
 
 ## 2. 源码结构（按类）
 
@@ -243,7 +248,8 @@ csc.exe /nologo /target:exe /optimize+ /codepage:65001 /out:TaskbarLyricsNetease
 
 ## 坑 16：config.ini 旧模板不含新增项
 - 首运行生成的 config.ini 不含后来新增的配置行（RenderMode/BackdropColor/TrayInsetV/ShowSongTitle 等）→ 程序用代码默认值兜底 ✓ 正常。
-- **新增配置项时**：改 `Config` 字段默认 + `Load()` 的 case + `WriteDefaults()` 模板 + README 表；旧 config.ini 不会自动补行（默认值兜底），托盘开关 `Save()` 会写回被切过的项。
+- **新增配置项时**：改 `Config` 字段默认 + `Load()` 的 case + `WriteDefaults()` 模板 + README 配置表 + **`config.example.ini` 模板** + AGENT.md；旧 config.ini 不会自动补行（默认值兜底），托盘开关 `Save()` 会写回被切过的项。
+- **首次运行自动生成默认 config.ini（`WriteDefaults`，微软雅黑等通用默认）**——所以其他人克隆仓库后无需任何配置文件即可运行，这就是"没有配置文件怎么用"的答案。
 
 ## 坑 17：下载大文件/网络慢
 - raw.githubusercontent / 大文件下载在用户网络慢，`Invoke-WebRequest -TimeoutSec` 需 300-600s，中断后检查文件大小重下（曾出现 4.8MB/13MB 不完整文件）。

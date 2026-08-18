@@ -17,8 +17,8 @@
 - **热键**：`Alt+Shift+←/→` 整体微调进度；`Alt+Shift+↑/↓` 跳上一句/下一句（拖进度条后对齐用）；
 - **系统托盘**：右下角音符图标，右键菜单提供**字体大小**（±2px）、
   图形化开关（前缀 / KTV 高亮 / 过滤行 / 暂停变暗 / 空闲提示 / 日志），以及"显示/隐藏歌词"、"退出"；
-- **苹方字体**：已安装苹方（PingFang SC / 苹方-简）三个字重，歌词用苹方渲染；
-- **单实例**：重复启动自动退出，不会开多个歌词条。
+- **单实例**：重复启动自动退出，不会开多个歌词条；
+- **字体可换**：默认微软雅黑（系统自带，开箱即用）；作者环境用苹方（需自行安装后配置 `FontName=苹方-简`）。
 
 ## 使用方法
 
@@ -58,30 +58,31 @@
 
 ## 配置文件说明（config.ini）
 
-以下为当前运行配置（`config.ini` 中未列出的项使用代码默认值）：
+**无需手动配置**：程序首次运行会自动生成默认 `config.ini`（开箱即用，字体用系统自带的微软雅黑）。
+仓库内提供参考模板 `config.example.ini`（完整注释），需要自定义时复制为 `config.ini` 修改即可。
 
 ```
-FontName=苹方-简            # 字体
-FontSize=26                 # 字号（像素），建议 18~26
-TextColor=#FFFFFF           # 歌词颜色
-ShadowColor=#000000         # 阴影颜色（Layered 模式描边用）
-DimColor=#B0B0B0            # KTV 模式未唱部分的颜色
-Align=Left                  # Left / Center（仅 Layered 模式）
-PaddingX=150                # 歌词条距任务栏左边缘像素（避开开始按钮和图标）
-OffsetMs=0                  # 进度偏移毫秒：歌词快填负数，慢填正数
-PollMs=500                  # 轮询毫秒（100~5000）
-KtvMode=false               # 逐字高亮：true=唱到变白/未唱灰色，false=整句纯白
-FilterMetaLines=true        # 过滤 作词/作曲/编曲 等元信息行
-DimWhenPaused=true          # 暂停时文字变暗
-RenderMode=Solid            # Solid=不透明实心条(最稳，默认) / Layered=分层透明(部分环境不可见)
-BackdropColor=#1C1C1C       # 歌词条背景色（默认匹配 Win11 深色任务栏）
-BackdropAlpha=90            # Layered 模式半透明黑底透明度 0~255，0 关闭
-TrayInsetV=3                # 歌词条上下各内缩像素（贴合任务栏可视区）
-TrayMaxWidth=0              # 歌词条最大宽度 px：0=自动(任务栏宽-900)，长歌词也能显示全
-ShowIdleText=false          # 没播放时是否显示提示文字
+FontName=Microsoft YaHei UI  # 字体（默认微软雅黑；想用苹方需自行安装后改"苹方-简"）
+FontSize=22                  # 字号（像素），建议 18~26
+TextColor=#FFFFFF            # 歌词颜色
+ShadowColor=#000000          # 阴影颜色（Layered 模式描边用）
+DimColor=#B0B0B0             # KTV 模式未唱部分的颜色
+Align=Left                   # Left / Center（仅 Layered 模式）
+PaddingX=150                 # 歌词条距任务栏左边缘像素（避开开始按钮和图标）
+OffsetMs=0                   # 进度偏移毫秒：歌词快填负数，慢填正数
+PollMs=500                   # 轮询毫秒（100~5000）
+KtvMode=false                # 逐字高亮：true=唱到变白/未唱灰色，false=整句纯白
+FilterMetaLines=true         # 过滤 作词/作曲/编曲 等元信息行
+DimWhenPaused=false          # 暂停时文字变暗
+RenderMode=Solid             # Solid=不透明实心条(最稳，默认) / Layered=分层透明(部分环境不可见)
+BackdropColor=#1C1C1C        # 歌词条背景色（默认匹配 Win11 深色任务栏，浅色任务栏可改浅色）
+BackdropAlpha=90             # Layered 模式半透明黑底透明度 0~255，0 关闭
+TrayInsetV=1                 # 歌词条上下各内缩像素（贴合任务栏可视区）
+TrayMaxWidth=0               # 歌词条最大宽度 px；0=自动(任务栏宽-900)，长歌词也能显示全
+ShowIdleText=false           # 没播放时是否显示提示文字
 IdleText=等待网易云音乐播放…
-ShowSongTitle=true          # 歌词前显示"歌名-歌手"前缀（括号内容自动隐藏），false=只显示歌词
-LogToFile=false             # 写 lyrics.log 日志（排查问题时改 true）
+ShowSongTitle=true           # 歌词前显示"歌名-歌手"前缀（括号内容自动隐藏），false=只显示歌词
+LogToFile=true               # 写 lyrics.log 日志
 ```
 
 > 托盘右键菜单中的开关（前缀 / KTV / 过滤行 / 暂停变暗 / 空闲提示 / 日志）点击即切换并自动写回此文件。
@@ -125,7 +126,8 @@ TaskbarLyricsNetease/
 ├── lib/                          # 编译期 WinRT 元数据（来自 Microsoft.Windows.SDK.Contracts）
 ├── build.bat                     # 编译脚本
 ├── run.bat                       # 一键构建并运行
-├── config.ini                    # 运行配置（自动生成，托盘开关会写回）
+├── config.example.ini            # 配置参考模板（完整注释）
+├── config.ini                    # 运行配置（首次运行自动生成，托盘开关会写回）
 └── README.md
 ```
 
