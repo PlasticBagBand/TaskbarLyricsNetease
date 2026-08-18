@@ -1,0 +1,13 @@
+# 本机配置（含个人设置），不入库
+config.ini
+
+# 日志
+lyrics.log
+
+# 编译产物（源码可离线编译，无需提交 exe）
+TaskbarLyricsNetease.exe
+*.exe
+
+# 临时/调试文件
+*.png
+*.cs~
